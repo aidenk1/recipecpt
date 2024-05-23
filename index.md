@@ -10,7 +10,7 @@ title: Student Blog
     <title>Your Webpage Title</title>
     <style>
         body {
-            background-image: url('images/geo.png');
+            background-image: url('https://files.catbox.moe/tzx8gf.jpg');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -41,10 +41,10 @@ title: Student Blog
 </head>
 <body>
     <div class="textbox">
-        <h1>Welcome to Geography Games</h1>
+        <h1>Welcome to ReciCPT</h1>
         <p></p>
     </div>
-    <a href="https://aidenk1.github.io/geocpt/login" class="button">Login</a>
+    <a href="/recipecpt/login" class="button">Login</a>
     <div>
-    <a href="https://aidenk1.github.io/geocpt/signup" class="button">Signup</a>
+    <a href="/recipecpt/signup" class="button">Signup</a>
 

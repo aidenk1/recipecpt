@@ -52,6 +52,10 @@ title: fullrecipe
         #likeButton:hover {
             background-color: #45a049;
         }
+        #likeButton.disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
         #likeCount {
             color: #FFD700; /* Golden color for the like count */
             font-weight: bold;
@@ -71,46 +75,51 @@ title: fullrecipe
         <h3>Supplies</h3>
         <p id="recommendedSupplies"></p>
         <p id="postedBy"></p>
-        <button id="likeButton">Like</button>
+        <button onclick="likeRecipe()" id="likeButton">Like</button>
         <p id="likeCount"></p>
         <button id="backButton">Back to Homepage</button>
     </div>
     <script>
+        function likeRecipe() {
+            console.log("like");
+            const likeButton = document.getElementById('likeButton');
+            likeButton.textContent = 'Already liked';
+            likeButton.classList.add('disabled');
+            likeButton.disabled = true;
+
+            const recipe = JSON.parse(localStorage.getItem('fullRecipe'));
+            fetch("http://127.0.0.1:8086/api/recipe/", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://127.0.0.1:4100',
+                    'Access-Control-Allow-Credentials': 'true'
+                },
+                body: JSON.stringify({ "recipe_id": recipe.id })
+            }).catch(error => {
+                console.error('Error liking the recipe:', error);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const recipe = JSON.parse(localStorage.getItem('fullRecipe'));
+            console.log(recipe);
             if (recipe) {
                 document.getElementById('recipeName').textContent = recipe.name;
-                // Check if the thumbnail URL starts with 'data:image/png;base64,'
                 if (recipe.thumbnail.startsWith('data:image/png;base64,')) {
-                    // If it does, set the src attribute directly to the base64 image data
                     document.getElementById('recipeThumbnail').src = recipe.thumbnail;
                 } else {
-                    // Otherwise, treat it as a regular image URL
                     document.getElementById('recipeThumbnail').src = recipe.thumbnail;
                 }
                 document.getElementById('recipeInstructions').textContent = recipe.instruction;
                 document.getElementById('recipeIngredients').textContent = recipe.ingredients;
                 document.getElementById('recommendedSupplies').textContent = recipe.supplies;
                 document.getElementById('postedBy').textContent = `Posted by: ${recipe.userid}`;
-                document.getElementById('likeCount').textContent = `Likes: ${recipe.likes}`;
-                document.getElementById('likeButton').addEventListener('click', async () => {
-                    console.log(recipe.id)
-                    const response = await fetch("http://127.0.0.1:8086/api/recipe/", {
-                        method: 'PUT'
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': 'http://127.0.0.1:4100',
-                            'Access-Control-Allow-Credentials': 'true'
-                        },
-                        body: JSON.stringify({ "recipe_id": recipe.id })
-                    });
-                });
             } else {
                 document.getElementById('recipeContainer').textContent = 'Recipe not found';
             }
-            // Add event listener to the back button
             document.getElementById('backButton').addEventListener('click', () => {
-                window.location.href = './homepage'; // Redirect to the homepage
+                window.location.href = './homepage';
             });
         });
     </script>
